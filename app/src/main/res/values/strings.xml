@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Book Shelf</string>
+    <string-array name="books">
+
+        <item>Harry Potter and the Sorcerer\'s Stone</item>
+        <item>Barry Cobbler and the Sorcerer\'s Shoes</item>
+        <item>Merry Stoner and the Sorcerer\'s Stoned</item>
+        <item>Sammy Sleeper and the Sorcerer\'s Snore</item>
+        <item>Larry Hooter and the Socialist\'s Store</item>
+        <item>Maggie Thatcher and the Separatist\'s War</item>
+        <item>Lenny Kravitz and the Singer Soars</item>
+        <item>Harry Harrier and the Hare\'s Hair</item>
+        <item>Terry Bogard and the Final Fight</item>
+        <item>Wary Hoarder and the Store\'s Out Of Toilet Paper</item>
+    </string-array>
+    <string-array name="authors">
+
+        <item>JK Rowling</item>
+        <item>JK Scholls</item>
+        <item>MJ Burning</item>
+        <item>REM Snoozing</item>
+        <item>MP Seizing</item>
+        <item>UK Leaving</item>
+        <item>JK Getaway</item>
+        <item>JK Balding</item>
+        <item>SNK Rowling</item>
+        <item>OK Boomer</item>
+
+    </string-array>
+</resources>
