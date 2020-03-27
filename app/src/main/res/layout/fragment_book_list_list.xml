@@ -10,4 +10,5 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".BookListFragment"
-    tools:listitem="@layout/fragment_book_list" />
+    tools:listitem="@layout/fragment_book_list"
+    android:orientation="vertical"/>

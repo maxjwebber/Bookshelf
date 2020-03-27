@@ -28,7 +28,7 @@ import java.util.List;
 public class BookListFragment extends Fragment {
 
 
-    private int mColumnCount = 2;
+    private int mColumnCount = 1;
     private ArrayList<HashMap> mBooks;
     private OnBookSelectedListener mListener;
 
@@ -45,7 +45,7 @@ public class BookListFragment extends Fragment {
         BookListFragment fragment = new BookListFragment();
         Bundle args = new Bundle();
 
-        args.putSerializable("HASHMAP",books);
+        args.putSerializable("HASHMAPS",books);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,8 +55,7 @@ public class BookListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = 2;
-            mBooks = (ArrayList<HashMap>) getArguments().getSerializable("HASHMAP");
+            mBooks = (ArrayList<HashMap>) getArguments().getSerializable("HASHMAPS");
         }
     }
 
