@@ -13,19 +13,15 @@ import edu.temple.bookshelf.BookListFragment.OnBookSelectedListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link ArrayList< HashMap >} and makes a call to the
- * specified {@link OnBookSelectedListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
+
 public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHolder> {
 
-    private final ArrayList<HashMap> mValues;
+    private final ArrayList<Book> mValues;
     private final OnBookSelectedListener mListener;
 
-    public BookListAdapter(ArrayList<HashMap> items, OnBookSelectedListener listener) {
+    public BookListAdapter(ArrayList<Book> items, OnBookSelectedListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -40,14 +36,8 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        String title ="";
-        String author="";
-        for (Map.Entry<String, String> entry : holder.mItem.entrySet()) {
-            title = entry.getKey();
-            author = entry.getValue();
-        }
-        holder.mBookView.setText(title);
-        holder.mAuthorView.setText(author);
+        holder.mBookView.setText(holder.mItem.title);
+        holder.mAuthorView.setText(holder.mItem.author);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,13 +60,13 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         public final View mView;
         public final TextView mBookView;
         public final TextView mAuthorView;
-        public HashMap<String,String> mItem;
+        public Book mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mBookView = (TextView) view.findViewById(R.id.book_title);
-            mAuthorView = (TextView) view.findViewById(R.id.author_name);
+            mBookView = view.findViewById(R.id.book_title);
+            mAuthorView = view.findViewById(R.id.author_name);
         }
 
         @Override

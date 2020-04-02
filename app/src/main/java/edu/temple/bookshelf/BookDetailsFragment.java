@@ -1,6 +1,5 @@
 package edu.temple.bookshelf;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,9 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link BookDetailsFragment#newInstance} factory method to
@@ -22,21 +18,21 @@ import java.util.Map;
  */
 public class BookDetailsFragment extends Fragment {
 
-    private HashMap<String,String> mBook;
+    private Book mBook;
 
 
     public BookDetailsFragment() {
         // Required empty public constructor
     }
 
-    public static BookDetailsFragment newInstance(HashMap<String,String> book) {
+    public static BookDetailsFragment newInstance(Book book) {
         BookDetailsFragment fragment = new BookDetailsFragment();
         if (book==null)
             fragment.setArguments(null);
         else
         {
             Bundle args = new Bundle();
-            args.putSerializable("HASHMAP",book);
+            args.putParcelable("BOOK",book);
             fragment.setArguments(args);
         }
         return fragment;
@@ -46,7 +42,7 @@ public class BookDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mBook = (HashMap<String,String>) getArguments().getSerializable("HASHMAP");
+            mBook = getArguments().getParcelable("BOOK");
         }
         else
             mBook = null;
@@ -68,14 +64,11 @@ public class BookDetailsFragment extends Fragment {
         displayBook(mBook);
     }
 
-    public void displayBook(HashMap<String,String> book)
+    public void displayBook(Book book)
     {
-        TextView authorDisplay = (TextView) getView().findViewById(R.id.author_display);
-        TextView titleDisplay = (TextView) getView().findViewById(R.id.title_display);
-        for (Map.Entry<String, String> entry : book.entrySet())
-        {
-            titleDisplay.setText(entry.getKey());
-            authorDisplay.setText(entry.getValue());
-        }
+        TextView authorDisplay = getView().findViewById(R.id.author_display);
+        TextView titleDisplay = getView().findViewById(R.id.title_display);
+        titleDisplay.setText(book.title);
+        authorDisplay.setText(book.author);
     }
 }

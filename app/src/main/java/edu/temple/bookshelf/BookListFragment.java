@@ -29,7 +29,7 @@ public class BookListFragment extends Fragment {
 
 
     private int mColumnCount = 1;
-    private ArrayList<HashMap> mBooks;
+    private ArrayList<Book> mBooks;
     private OnBookSelectedListener mListener;
 
     /**
@@ -41,11 +41,11 @@ public class BookListFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static BookListFragment newInstance(ArrayList<HashMap> books) {
+    public static BookListFragment newInstance(ArrayList<Book> books) {
         BookListFragment fragment = new BookListFragment();
         Bundle args = new Bundle();
 
-        args.putSerializable("HASHMAPS",books);
+        args.putSerializable("BOOKS",books);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +55,7 @@ public class BookListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mBooks = (ArrayList<HashMap>) getArguments().getSerializable("HASHMAPS");
+            mBooks = (ArrayList<Book>) getArguments().getSerializable("BOOKS");
         }
     }
 
@@ -92,18 +92,10 @@ public class BookListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
+
     public interface OnBookSelectedListener {
-        // TODO: Update argument type and name
-        void onBookSelected(HashMap book);
+
+        void onBookSelected(Book book);
     }
 }
