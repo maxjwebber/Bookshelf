@@ -12,12 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.temple.bookshelf.dummy.DummyContent;
-import edu.temple.bookshelf.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -39,7 +35,7 @@ public class BookListFragment extends Fragment {
     public BookListFragment() {
     }
 
-    // TODO: Customize parameter initialization
+
     @SuppressWarnings("unused")
     public static BookListFragment newInstance(ArrayList<Book> books) {
         BookListFragment fragment = new BookListFragment();
@@ -63,7 +59,8 @@ public class BookListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_list_list, container, false);
-
+        if (savedInstanceState != null)
+            mBooks = (ArrayList<Book>) savedInstanceState.getSerializable("BOOK");
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();

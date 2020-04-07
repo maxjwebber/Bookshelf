@@ -9,7 +9,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +25,9 @@ public class BookDetailsFragment extends Fragment {
 
     private Book mBook;
 
+    public Book getmBook() {
+        return mBook;
+    }
 
     public BookDetailsFragment() {
         // Required empty public constructor
@@ -39,6 +47,12 @@ public class BookDetailsFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable("BOOK",mBook);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -52,6 +66,8 @@ public class BookDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        if (savedInstanceState != null)
+            mBook = savedInstanceState.getParcelable("BOOK");
         View v= inflater.inflate(R.layout.fragment_book_details, container, false);
 
         return v;
@@ -66,8 +82,10 @@ public class BookDetailsFragment extends Fragment {
 
     public void displayBook(Book book)
     {
-        TextView authorDisplay = getView().findViewById(R.id.author_display);
+        TextView authorDisplay = Objects.requireNonNull(getView()).findViewById(R.id.author_display);
         TextView titleDisplay = getView().findViewById(R.id.title_display);
+        ImageView coverDisplay = getView().findViewById(R.id.cover_display);
+        Picasso.get().load(book.coverURL).into(coverDisplay);
         titleDisplay.setText(book.title);
         authorDisplay.setText(book.author);
     }
