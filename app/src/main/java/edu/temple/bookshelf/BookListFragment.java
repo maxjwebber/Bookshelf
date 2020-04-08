@@ -61,12 +61,14 @@ public class BookListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book_list_list, container, false);
         if (savedInstanceState != null)
             mBooks = (ArrayList<Book>) savedInstanceState.getSerializable("BOOK");
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             recyclerView.setAdapter(new BookListAdapter(mBooks, mListener));
+
         }
         return view;
     }

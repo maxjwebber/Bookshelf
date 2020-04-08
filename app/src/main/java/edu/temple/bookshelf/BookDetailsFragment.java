@@ -25,9 +25,6 @@ public class BookDetailsFragment extends Fragment {
 
     private Book mBook;
 
-    public Book getmBook() {
-        return mBook;
-    }
 
     public BookDetailsFragment() {
         // Required empty public constructor

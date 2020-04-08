@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     private BookListFragment bookListFragment;
     private BookDetailsFragment bookDetailsFragment;
     private static final String ACTIVITY_TAG = "MainActivity";
-    private static final String FRAGMENT1_TAG = "Fragment1";
-    private static final String FRAGMENT2_TAG = "Fragment2";
+    private static final String FRAGMENT_LIST_TAG = "List";
+    private static final String FRAGMENT_DETAILS_TAG = "Details";
     ArrayList<Book> books;
     Book activeBook;
     FragmentManager fm = getSupportFragmentManager();
@@ -45,25 +45,29 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     @Override
     public void onBackPressed() {
-
-        if (fm.findFragmentById(R.id.container1) instanceof BookDetailsFragment) {
-            fm.beginTransaction()
-                    .replace(R.id.container1, BookListFragment.newInstance(books))
-                    .commit();
-        } else super.onBackPressed();
+        if(findViewById(R.id.container2)!=null&&fm.getBackStackEntryCount() > 0)
+                fm.popBackStack();
+        else
+            super.onBackPressed();
     }
 
     public void onBookSelected(Book book) {
         activeBook = book;
-        if (findViewById(R.id.container2)!=null) {
-            ((BookDetailsFragment) Objects.requireNonNull(fm.findFragmentById(R.id.container2))).displayBook(book);
+        if (findViewById(R.id.container2)!=null)
+        {
+            if(bookDetailsFragment!=null)
+            bookDetailsFragment.displayBook(book);
+            else
+                bookDetailsFragment = BookDetailsFragment.newInstance(book);
+            fm.beginTransaction()
+                    .replace(R.id.container2, bookDetailsFragment,FRAGMENT_DETAILS_TAG).addToBackStack(null).commit();
         }
         else
         {
             bookDetailsFragment = BookDetailsFragment.newInstance(book);
             fm.beginTransaction()
-                    .replace(R.id.container1, bookDetailsFragment)
-                    .commit();
+                    .replace(R.id.container1, bookDetailsFragment,FRAGMENT_DETAILS_TAG).addToBackStack(null).commit();
+
         }
 
 }
@@ -76,42 +80,12 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         rq = Volley.newRequestQueue(MainActivity.this);
         Button button = findViewById(R.id.button);
 
-        if (savedInstanceState != null) {
-            if (getSupportFragmentManager().findFragmentByTag(FRAGMENT2_TAG)!=null)
-            {
-                bookListFragment = (BookListFragment)
-                        getSupportFragmentManager().findFragmentByTag(FRAGMENT1_TAG);
-                bookDetailsFragment = (BookDetailsFragment)
-                        getSupportFragmentManager().findFragmentByTag(FRAGMENT2_TAG);
-            }
-            else if (getSupportFragmentManager().findFragmentByTag(FRAGMENT1_TAG) instanceof BookDetailsFragment)
-            {
-                bookDetailsFragment = (BookDetailsFragment)
-                        getSupportFragmentManager().findFragmentByTag(FRAGMENT1_TAG);
-            }
-            else
-            {
-                bookListFragment = (BookListFragment)
-                        getSupportFragmentManager().findFragmentByTag(FRAGMENT1_TAG);
-            }
-            if (findViewById(R.id.container2)!=null)
-            {
-                if (bookDetailsFragment!=null)
-                    fm.beginTransaction().replace(R.id.container1, bookListFragment).replace(R.id.container2, bookDetailsFragment).commit();
-                else if (bookListFragment!=null)
-                    fm.beginTransaction().replace(R.id.container1, bookListFragment).replace(R.id.container2, BookDetailsFragment.newInstance(null)).commit();
-            }
-            else
-            {
-                if (bookDetailsFragment!=null)
-                    fm.beginTransaction().replace(R.id.container1, bookDetailsFragment).commit();
-                else if (bookListFragment!=null)
-                    fm.beginTransaction().replace(R.id.container1, bookListFragment).commit();
-            }
-
+        if (savedInstanceState == null && findViewById(R.id.container2)!=null)
+        {
+            bookDetailsFragment = BookDetailsFragment.newInstance(null);
+            fm.beginTransaction().replace(R.id.container2, bookDetailsFragment, FRAGMENT_DETAILS_TAG).addToBackStack(null).commit();
         }
-        else if (findViewById(R.id.container2)!=null)
-            fm.beginTransaction().replace(R.id.container2, BookDetailsFragment.newInstance(null)).commit();
+
 
 
 
@@ -138,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                                                 books.add(new Book(item.getInt("book_id"), item.getString("title"), item.getString("author"), item.getString("cover_url")));
                                             }
                                             bookListFragment = BookListFragment.newInstance(books);
-                                            fm.beginTransaction().replace(R.id.container1, bookListFragment).commit();
+                                            fm.beginTransaction().replace(R.id.container1, bookListFragment,FRAGMENT_LIST_TAG).addToBackStack(null).commit();
                                         } catch (JSONException e) {
                                             Log.e(ACTIVITY_TAG, "Exception: "+Log.getStackTraceString(e));
                                         }
@@ -164,10 +138,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
 
         super.onSaveInstanceState(savedInstanceState);
-        if (fm.findFragmentById(R.id.container1)!=null)
-        fm.putFragment(savedInstanceState,FRAGMENT1_TAG,fm.findFragmentById(R.id.container1));
-        if (fm.findFragmentById(R.id.container2)!=null)
-            fm.putFragment(savedInstanceState,FRAGMENT2_TAG,fm.findFragmentById(R.id.container2));
+        if (fm.findFragmentById(R.id.container2) instanceof BookDetailsFragment)
+            fm.putFragment(savedInstanceState,FRAGMENT_DETAILS_TAG,fm.findFragmentById(R.id.container2));
+        if (fm.findFragmentById(R.id.container1) instanceof BookDetailsFragment)
+            fm.putFragment(savedInstanceState,FRAGMENT_DETAILS_TAG,fm.findFragmentById(R.id.container1));
+        if (fm.findFragmentById(R.id.container1) instanceof BookListFragment)
+            fm.putFragment(savedInstanceState,FRAGMENT_LIST_TAG,fm.findFragmentById(R.id.container1));
+
     }
 
 }
