@@ -1,16 +1,25 @@
 package com.example.bookshelf;
 
 import edu.temple.audiobookplayer.*;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -39,6 +48,12 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     Intent serviceIntent;
     boolean connected;
     AudiobookService.MediaControlBinder mediaControlBinder;
+
+    ConstraintLayout mediaControlLayout;
+    TextView nowPlaying;
+    Handler progressHandler;
+    SeekBar seekBar;
+    Runnable runner;
 
     ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -138,6 +153,60 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                         .commit();
             }
         }
+
+        //setup for media control display.
+        mediaControlLayout = findViewById(R.id.mediaControls);
+        if (connected&&mediaControlBinder.isPlaying())
+            mediaControlLayout.setVisibility(View.VISIBLE);
+        else
+            mediaControlLayout.setVisibility(View.INVISIBLE);
+
+        Button pauseButton = findViewById(R.id.pauseButton);
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaControlBinder.pause();
+            }
+        });
+
+        Button stopButton = findViewById(R.id.stopButton);
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaControlBinder.stop();
+                stopService(serviceIntent);
+                progressHandler = null;
+                mediaControlLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        nowPlaying = findViewById(R.id.nowPlaying);
+        if (connected&&mediaControlBinder.isPlaying())
+        {
+            nowPlaying.setText("Now Playing: "+selectedBook.getTitle());
+        }
+
+        seekBar = findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser)
+                mediaControlBinder.seekTo(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+
+
     }
 
     /*
@@ -145,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
      */
     private void fetchBooks(String searchString) {
         /*
-        A Volloy JSONArrayRequest will automatically convert a JSON Array response from
+        A Volley JSONArrayRequest will automatically convert a JSON Array response from
         a web server to an Android JSONArray object
          */
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(SEARCH_API + searchString, new Response.Listener<JSONArray>() {
@@ -220,8 +289,29 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
     @Override
-    public void playBook(int id)
+    public void playBook()
     {
-
+        if(connected)
+        {
+            progressHandler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(@NonNull Message msg) {
+                    if(mediaControlBinder!=null&&mediaControlBinder.isPlaying())
+                    {
+                        AudiobookService.BookProgress progress = (AudiobookService.BookProgress) msg.obj;
+                        seekBar.setProgress(progress.getProgress());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            mediaControlBinder.setProgressHandler(progressHandler);
+            seekBar.setMax(selectedBook.getDuration());
+            //when playButton is pressed inside BookDetailsFragment, this is invoked and book is played.
+            mediaControlBinder.play(selectedBook.getId());
+            startService(serviceIntent);
+            nowPlaying.setText("Now Playing: "+selectedBook.getTitle());
+            mediaControlLayout.setVisibility(View.VISIBLE);
+        }
     }
 }

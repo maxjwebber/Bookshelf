@@ -63,7 +63,7 @@ public class BookDetailsFragment extends Fragment {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+            parentActivity.playBook();
             }
         });
         /*
@@ -107,6 +107,6 @@ public class BookDetailsFragment extends Fragment {
     Interface for communicating with attached activity
     */
     interface PlayInterface {
-        void playBook(int id);
+        void playBook();
     }
 }
