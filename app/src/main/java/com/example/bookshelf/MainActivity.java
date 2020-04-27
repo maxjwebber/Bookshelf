@@ -1,9 +1,14 @@
 package com.example.bookshelf;
 
+import edu.temple.audiobookplayer.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,9 +24,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements BookListFragment.BookSelectedInterface {
+public class MainActivity extends AppCompatActivity implements BookListFragment.BookSelectedInterface, BookDetailsFragment.PlayInterface {
 
     private static final String BOOKS_KEY = "books";
     private static final String SELECTED_BOOK_KEY = "selectedBook";
@@ -31,6 +35,25 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     boolean twoPane;
     BookListFragment bookListFragment;
     BookDetailsFragment bookDetailsFragment;
+
+    Intent serviceIntent;
+    boolean connected;
+    AudiobookService.MediaControlBinder mediaControlBinder;
+
+    ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            connected = true;
+            mediaControlBinder = (AudiobookService.MediaControlBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            connected = false;
+            mediaControlBinder = null;
+        }
+    };
+
 
     ArrayList<Book> books;
     RequestQueue requestQueue;
@@ -44,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         searchEditText = findViewById(R.id.searchEditText);
 
         /*
@@ -67,6 +89,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         }
         else
             books = new ArrayList<Book>();
+
+
+        //binding to our library service
+        serviceIntent = new Intent(MainActivity.this, AudiobookService.class);
+        bindService(serviceIntent,serviceConnection,BIND_AUTO_CREATE);
 
         twoPane = findViewById(R.id.container2) != null;
         fm = getSupportFragmentManager();
@@ -190,5 +217,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         // Save previously searched books as well as selected book
         outState.putParcelableArrayList(BOOKS_KEY, books);
         outState.putParcelable(SELECTED_BOOK_KEY, selectedBook);
+    }
+
+    @Override
+    public void playBook(int id)
+    {
+
     }
 }

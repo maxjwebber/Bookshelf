@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ public class BookListFragment extends Fragment {
         if (getArguments() != null) {
             books.addAll((ArrayList) getArguments().getParcelableArrayList(BOOK_LIST_KEY));
         }
+
     }
 
     @Override

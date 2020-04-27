@@ -6,16 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".BookDetailsFragment">
 
+    <Button
+        android:id="@+id/playButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PLAY"
+        app:layout_constraintEnd_toEndOf="@+id/titleTextView"
+        app:layout_constraintStart_toStartOf="@+id/titleTextView"
+        tools:layout_editor_absoluteY="209dp" />
+
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
         android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/authorTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/authorTextView"
+        app:layout_constraintTop_toBottomOf="@+id/playButton"
         app:layout_constraintVertical_bias="0.088" />
 
     <TextView
@@ -24,8 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/coverImageView"
+        app:layout_constraintStart_toStartOf="@+id/coverImageView"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
     <ImageView
@@ -37,4 +47,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/authorTextView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
