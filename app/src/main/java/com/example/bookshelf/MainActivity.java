@@ -124,12 +124,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
         fm.beginTransaction()
                 .replace(R.id.container1, bookListFragment)
-        .commit();
+                .commit();
 
         /*
         If we have two containers available, load a single instance
         of BookDetailsFragment to display all selected books.
-
         If a book was previously selected, show that book in the book details fragment
         *NOTE* we could have simplified this to a single line by having the
         fragment's newInstance() method ignore a null reference, but this way allow
@@ -155,11 +154,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         }
 
         //setup for media control display.
-        mediaControlLayout = findViewById(R.id.mediaControls);
-        if (connected&&mediaControlBinder.isPlaying())
-            mediaControlLayout.setVisibility(View.VISIBLE);
-        else
-            mediaControlLayout.setVisibility(View.INVISIBLE);
 
         Button pauseButton = findViewById(R.id.pauseButton);
         pauseButton.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         });
 
         nowPlaying = findViewById(R.id.nowPlaying);
-        if (connected&&mediaControlBinder.isPlaying())
+        if (selectedBook!=null)
         {
             nowPlaying.setText("Now Playing: "+selectedBook.getTitle());
         }
@@ -191,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(fromUser)
-                mediaControlBinder.seekTo(progress);
+                    mediaControlBinder.seekTo(progress);
             }
 
             @Override
@@ -308,10 +302,10 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             mediaControlBinder.setProgressHandler(progressHandler);
             seekBar.setMax(selectedBook.getDuration());
             //when playButton is pressed inside BookDetailsFragment, this is invoked and book is played.
-            mediaControlBinder.play(selectedBook.getId());
+            mediaControlBinder.play(selectedBook.getId(),0);
             startService(serviceIntent);
             nowPlaying.setText("Now Playing: "+selectedBook.getTitle());
-            mediaControlLayout.setVisibility(View.VISIBLE);
+
         }
     }
 }
